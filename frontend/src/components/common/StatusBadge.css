@@ -60,3 +60,14 @@
 .status-badge--neutral .status-badge__dot {
   background-color: var(--color-text-secondary);
 }
+
+/* Size modifiers */
+.status-badge--sm {
+  font-size: 11px;
+  padding: 2px 8px;
+  gap: 4px;
+}
+.status-badge--sm .status-badge__dot {
+  width: 5px;
+  height: 5px;
+}

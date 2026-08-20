@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './components/common/Toast';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Layout
 import AppShell from './components/layout/AppShell';
@@ -20,39 +22,55 @@ import HelpPage              from './pages/HelpPage';
 
 /**
  * App — root component.
- * Wraps the application in the ToastProvider and BrowserRouter.
- * Defines all application routes using React Router v6.
+ *
+ * Provider hierarchy (outermost → innermost):
+ *   BrowserRouter → AuthProvider → ToastProvider → Routes
+ *
+ * Route hierarchy:
+ *   /login           — public, no auth required
+ *   /dashboard etc.  — protected by ProtectedRoute → AppShell (with Outlet)
+ *
+ * ProtectedRoute checks the auth context:
+ *   - Loading → shows a spinner
+ *   - No user → redirects to /login (with return location preserved)
+ *   - Authenticated → renders children (AppShell which contains Outlet)
  */
 export default function App() {
   return (
-    <ToastProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<LoginPage />} />
+    <BrowserRouter>
+      <AuthProvider>
+        <ToastProvider>
+          <Routes>
+            {/* ── Public ── */}
+            <Route path="/login" element={<LoginPage />} />
 
-          {/* Authenticated routes — wrapped in AppShell */}
-          <Route element={<AppShell />}>
-            <Route path="/dashboard"            element={<DashboardPage />} />
-            <Route path="/patients"             element={<PatientsPage />} />
-            <Route path="/patients/new"         element={<NewPatientPage />} />
-            <Route path="/appointments"         element={<AppointmentsPage />} />
-            <Route path="/appointments/new"     element={<NewAppointmentPage />} />
-            <Route path="/dentists"             element={<DentistsPage />} />
-            <Route path="/treatments"           element={<TreatmentsPage />} />
-            <Route path="/billing"              element={<BillingPage />} />
-            <Route path="/billing/receipt"      element={<BillingReceiptPage />} />
-            <Route path="/reports"              element={<ReportsPage />} />
-            <Route path="/help"                 element={<HelpPage />} />
-          </Route>
+            {/* ── Protected — wrapped in AppShell layout ── */}
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppShell />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/dashboard"            element={<DashboardPage />} />
+              <Route path="/patients"             element={<PatientsPage />} />
+              <Route path="/patients/new"         element={<NewPatientPage />} />
+              <Route path="/appointments"         element={<AppointmentsPage />} />
+              <Route path="/appointments/new"     element={<NewAppointmentPage />} />
+              <Route path="/dentists"             element={<DentistsPage />} />
+              <Route path="/treatments"           element={<TreatmentsPage />} />
+              <Route path="/billing"              element={<BillingPage />} />
+              <Route path="/billing/receipt"      element={<BillingReceiptPage />} />
+              <Route path="/reports"              element={<ReportsPage />} />
+              <Route path="/help"                 element={<HelpPage />} />
+            </Route>
 
-          {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
-          {/* Catch-all — redirect unknown routes to dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </ToastProvider>
+            {/* ── Redirects ── */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </ToastProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

@@ -18,7 +18,9 @@ import org.springframework.test.context.TestPropertySource;
         "spring.datasource.username=sa",
         "spring.datasource.password=",
         "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.jpa.open-in-view=false"
+        "spring.jpa.open-in-view=false",
+        "jwt.secret=SunriseDentalJwtSecretKeyForTestSuite2024",
+        "jwt.expiration=86400000"
 })
 class SunriseDentalApplicationTests {
 

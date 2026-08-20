@@ -13,12 +13,15 @@ const api = axios.create({
 });
 
 /**
- * Request interceptor — attach auth token when available.
- * Will be expanded in the authentication commit.
+ * Request interceptor — attach JWT Bearer token when available.
+ * Reads from localStorage or sessionStorage depending on remember-me preference,
+ * matching the storage strategy in AuthContext.
  */
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const storageType = localStorage.getItem('sd_storage_type');
+    const store = storageType === 'session' ? sessionStorage : localStorage;
+    const token = store.getItem('sd_auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,14 +31,22 @@ api.interceptors.request.use(
 );
 
 /**
- * Response interceptor — unwrap data and handle global errors.
+ * Response interceptor — handle global 401 (token expired / invalid).
  */
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Auth expired — will redirect to login in auth commit
-      localStorage.removeItem('auth_token');
+      // Clear all auth storage — AuthContext logout will handle the redirect
+      localStorage.removeItem('sd_auth_token');
+      localStorage.removeItem('sd_auth_user');
+      localStorage.removeItem('sd_storage_type');
+      sessionStorage.removeItem('sd_auth_token');
+      sessionStorage.removeItem('sd_auth_user');
+      // Only redirect if not already on login page
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
