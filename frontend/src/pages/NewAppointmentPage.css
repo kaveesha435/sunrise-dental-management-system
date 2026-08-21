@@ -1,0 +1,192 @@
+/* ============================================================
+   New Appointment Page Styles
+   ============================================================ */
+.new-appointment-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 960px;
+}
+
+.new-appointment-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.new-appointment-form {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.new-appointment-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-6);
+}
+
+@media (max-width: 800px) {
+  .new-appointment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.new-appointment-section-title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Patient Search Input & Dropdown */
+.patient-search-container {
+  position: relative;
+}
+
+.patient-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: var(--space-1);
+}
+
+.patient-search-item {
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color var(--transition-fast);
+}
+
+.patient-search-item:hover {
+  background-color: var(--color-bg);
+}
+
+.patient-search-item__name {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.patient-search-item__meta {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.selected-patient-card {
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-info);
+  border-radius: var(--radius-input);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-2);
+}
+
+.selected-patient-card__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-patient-card__name {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.selected-patient-card__meta {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+/* Availability Indicator */
+.availability-indicator {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-input);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  border: 1px solid transparent;
+}
+
+.availability-indicator--available {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.availability-indicator--unavailable {
+  background-color: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.availability-indicator--checking {
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.availability-indicator--empty {
+  background-color: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+/* Appointment Summary Card */
+.appointment-summary-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.appointment-summary-card__title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+}
+
+.appointment-summary-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appointment-summary-card__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+}
+
+.appointment-summary-card__value {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}

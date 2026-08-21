@@ -3,13 +3,24 @@ package com.sunrisedental.service.impl;
 import com.sunrisedental.dto.AppointmentSummaryDto;
 import com.sunrisedental.dto.DashboardStatsDto;
 import com.sunrisedental.dto.WeeklyChartDto;
+import com.sunrisedental.entity.Appointment;
+import com.sunrisedental.repository.AppointmentRepository;
 import com.sunrisedental.repository.PatientRepository;
 import com.sunrisedental.service.DashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Dashboard service implementation.
@@ -32,67 +43,67 @@ import java.util.List;
 public class DashboardServiceImpl implements DashboardService {
 
     private final PatientRepository patientRepository;
+    private final AppointmentRepository appointmentRepository;
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
 
     @Override
     public DashboardStatsDto getStats() {
-        /*
-         * Commit 03: totalPatients now reads from real DB via PatientRepository.
-         * TODO Commit 04: todayAppointments = appointmentRepository.countByDate(LocalDate.now())
-         * TODO Commit 07: todayRevenue = invoiceRepository.sumPaidToday(LocalDate.now())
-         * TODO Commit 05: availableDentists = dentistRepository.countByStatusAndActive(AVAILABLE, true)
-         */
         long totalPatients = patientRepository.count();
+        long todayApptsCount = appointmentRepository.countTodayAppointments(LocalDate.now());
+        
         return DashboardStatsDto.builder()
-                .todayAppointments(8)
+                .todayAppointments((int) todayApptsCount)
                 .totalPatients(totalPatients)
-                .todayRevenue(new BigDecimal("24500.00"))
-                .availableDentists(3)
+                .todayRevenue(new BigDecimal("24500.00")) // Billing not implemented yet
+                .availableDentists(3) // Dentist management not implemented yet
                 .build();
     }
 
     @Override
     public List<AppointmentSummaryDto> getTodayAppointments() {
-        /*
-         * TODO Commit 04: Replace with appointmentRepository.findByDate(LocalDate.now())
-         *   mapped to AppointmentSummaryDto via a projection or mapper.
-         */
-        return List.of(
-                appt(1L, "Amara Silva",          "Dr. D. Perera",     "09:00 AM", "Teeth Cleaning", "COMPLETED"),
-                appt(2L, "Kasun Fernando",        "Dr. L. Wijesinghe", "09:30 AM", "Root Canal",     "IN_PROGRESS"),
-                appt(3L, "Nisha Raj",             "Dr. D. Perera",     "10:00 AM", "Filling",        "SCHEDULED"),
-                appt(4L, "Rohan Jayawardena",     "Dr. S. Fernando",   "10:30 AM", "Extraction",     "SCHEDULED"),
-                appt(5L, "Dilani Herath",         "Dr. L. Wijesinghe", "11:00 AM", "Consultation",   "SCHEDULED"),
-                appt(6L, "Tharanga Silva",        "Dr. D. Perera",     "02:00 PM", "Whitening",      "SCHEDULED"),
-                appt(7L, "Priya Krishnamurti",    "Dr. S. Fernando",   "03:30 PM", "Check-up",       "SCHEDULED"),
-                appt(8L, "Sandaru Gunasekara",    "Dr. D. Perera",     "04:00 PM", "Braces Adjust",  "SCHEDULED")
-        );
+        List<Appointment> appts = appointmentRepository.findTodayAppointmentsList(LocalDate.now());
+        return appts.stream()
+                .map(a -> appt(a.getId(), a.getPatient().getFullName(), a.getDentist(), 
+                        a.getAppointmentTime().format(TIME_FORMATTER), a.getTreatment(), a.getStatus().name()))
+                .toList();
     }
 
     @Override
     public List<AppointmentSummaryDto> getUpcomingAppointments() {
-        /*
-         * TODO Commit 04: Replace with appointmentRepository.findUpcoming(LocalDate.now(), limit=5)
-         */
-        return List.of(
-                appt(9L,  "Kavya Patel",          "Dr. L. Wijesinghe", "Tomorrow, 10:00 AM", "Consultation",   "SCHEDULED"),
-                appt(10L, "Mihiri Gunawardena",   "Dr. S. Fernando",   "Tomorrow, 02:30 PM", "Filling",        "SCHEDULED"),
-                appt(11L, "Amara Silva",           "Dr. D. Perera",     "Wed, 09:00 AM",      "Follow-up",      "SCHEDULED"),
-                appt(12L, "Yasir Hameed",          "Dr. L. Wijesinghe", "Wed, 11:00 AM",      "Teeth Cleaning", "SCHEDULED"),
-                appt(13L, "Sachini Bandara",       "Dr. D. Perera",     "Thu, 10:00 AM",      "Root Canal",     "SCHEDULED")
-        );
+        List<Appointment> appts = appointmentRepository.findUpcomingAppointments(
+                LocalDate.now(), LocalTime.now(), PageRequest.of(0, 5));
+        return appts.stream()
+                .map(a -> appt(a.getId(), a.getPatient().getFullName(), a.getDentist(), 
+                        a.getAppointmentDate().toString() + " · " + a.getAppointmentTime().format(TIME_FORMATTER), 
+                        a.getTreatment(), a.getStatus().name()))
+                .toList();
     }
 
     @Override
     public WeeklyChartDto getWeeklyChart() {
-        /*
-         * TODO Commit 04: Replace with:
-         *   SELECT DATE(appointment_date), COUNT(*) FROM appointments
-         *   WHERE appointment_date BETWEEN :weekStart AND :weekEnd
-         *   GROUP BY DATE(appointment_date)
-         */
+        LocalDate today = LocalDate.now();
+        LocalDate monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate sunday = monday.plusDays(6);
+
+        List<Object[]> stats = appointmentRepository.getWeeklyStats(monday, sunday);
+        Map<LocalDate, Long> countsMap = new HashMap<>();
+        for (Object[] row : stats) {
+            countsMap.put((LocalDate) row[0], (Long) row[1]);
+        }
+
+        List<String> labels = List.of("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+        List<Integer> appointments = new ArrayList<>();
+        
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = monday.plusDays(i);
+            long count = countsMap.getOrDefault(date, 0L);
+            appointments.add((int) count);
+        }
+
         return WeeklyChartDto.builder()
-                .labels(List.of("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
-                .appointments(List.of(12, 8, 15, 10, 14, 6, 2))
+                .labels(labels)
+                .appointments(appointments)
                 .build();
     }
 
