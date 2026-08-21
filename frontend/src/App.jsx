@@ -11,6 +11,7 @@ import LoginPage             from './pages/LoginPage';
 import DashboardPage         from './pages/DashboardPage';
 import PatientsPage          from './pages/PatientsPage';
 import NewPatientPage        from './pages/NewPatientPage';
+import PatientDetailPage     from './pages/PatientDetailPage';
 import AppointmentsPage      from './pages/AppointmentsPage';
 import NewAppointmentPage    from './pages/NewAppointmentPage';
 import DentistsPage          from './pages/DentistsPage';
@@ -55,6 +56,8 @@ export default function App() {
               <Route path="/dashboard"            element={<DashboardPage />} />
               <Route path="/patients"             element={<PatientsPage />} />
               <Route path="/patients/new"         element={<NewPatientPage />} />
+              <Route path="/patients/:id"         element={<PatientDetailPage />} />
+              <Route path="/patients/:id/edit"    element={<NewPatientPage />} />
               <Route path="/appointments"         element={<AppointmentsPage />} />
               <Route path="/appointments/new"     element={<NewAppointmentPage />} />
               <Route path="/dentists"             element={<DentistsPage />} />

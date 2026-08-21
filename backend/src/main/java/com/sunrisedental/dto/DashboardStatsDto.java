@@ -20,8 +20,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DashboardStatsDto {
 
-    private int todayAppointments;
-    private int totalPatients;
+    private int        todayAppointments;
+    private long       totalPatients;       // long — matches PatientRepository.count()
     private BigDecimal todayRevenue;
-    private int availableDentists;
+    private int        availableDentists;
 }

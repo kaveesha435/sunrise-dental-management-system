@@ -3,7 +3,9 @@ package com.sunrisedental.service.impl;
 import com.sunrisedental.dto.AppointmentSummaryDto;
 import com.sunrisedental.dto.DashboardStatsDto;
 import com.sunrisedental.dto.WeeklyChartDto;
+import com.sunrisedental.repository.PatientRepository;
 import com.sunrisedental.service.DashboardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,19 +28,23 @@ import java.util.List;
  * ============================================================
  */
 @Service
+@RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
+
+    private final PatientRepository patientRepository;
 
     @Override
     public DashboardStatsDto getStats() {
         /*
-         * TODO Commit 03: totalPatients = patientRepository.count()
+         * Commit 03: totalPatients now reads from real DB via PatientRepository.
          * TODO Commit 04: todayAppointments = appointmentRepository.countByDate(LocalDate.now())
          * TODO Commit 07: todayRevenue = invoiceRepository.sumPaidToday(LocalDate.now())
          * TODO Commit 05: availableDentists = dentistRepository.countByStatusAndActive(AVAILABLE, true)
          */
+        long totalPatients = patientRepository.count();
         return DashboardStatsDto.builder()
                 .todayAppointments(8)
-                .totalPatients(147)
+                .totalPatients(totalPatients)
                 .todayRevenue(new BigDecimal("24500.00"))
                 .availableDentists(3)
                 .build();
