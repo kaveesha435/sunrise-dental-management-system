@@ -12,13 +12,11 @@ public class AppointmentRequest {
     @NotNull(message = "Patient ID is required")
     private Long patientId;
 
-    @NotBlank(message = "Dentist is required")
-    @Size(max = 100, message = "Dentist name must not exceed 100 characters")
-    private String dentist;
+    @NotNull(message = "Dentist ID is required")
+    private Long dentistId;
 
-    @NotBlank(message = "Treatment is required")
-    @Size(max = 100, message = "Treatment name must not exceed 100 characters")
-    private String treatment;
+    @NotNull(message = "Treatment ID is required")
+    private Long treatmentId;
 
     @NotNull(message = "Appointment date is required")
     @FutureOrPresent(message = "Appointment date must be today or in the future")
@@ -43,11 +41,11 @@ public class AppointmentRequest {
     public Long getPatientId() { return patientId; }
     public void setPatientId(Long patientId) { this.patientId = patientId; }
 
-    public String getDentist() { return dentist; }
-    public void setDentist(String dentist) { this.dentist = dentist; }
+    public Long getDentistId() { return dentistId; }
+    public void setDentistId(Long dentistId) { this.dentistId = dentistId; }
 
-    public String getTreatment() { return treatment; }
-    public void setTreatment(String treatment) { this.treatment = treatment; }
+    public Long getTreatmentId() { return treatmentId; }
+    public void setTreatmentId(Long treatmentId) { this.treatmentId = treatmentId; }
 
     public LocalDate getAppointmentDate() { return appointmentDate; }
     public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }

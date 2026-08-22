@@ -17,26 +17,33 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             SELECT a FROM Appointment a
             WHERE (:search IS NULL OR :search = '' 
                    OR LOWER(a.patient.fullName) LIKE LOWER(CONCAT('%', :search, '%'))
-                   OR LOWER(a.dentist) LIKE LOWER(CONCAT('%', :search, '%'))
+                   OR LOWER(a.dentist.name) LIKE LOWER(CONCAT('%', :search, '%'))
                    OR LOWER(a.appointmentNumber) LIKE LOWER(CONCAT('%', :search, '%'))
                   )
               AND (CAST(:date AS date) IS NULL OR a.appointmentDate = :date)
               AND (:patientId IS NULL OR a.patient.id = :patientId)
-              AND (:dentist IS NULL OR :dentist = '' OR LOWER(a.dentist) = LOWER(:dentist))
-              AND (:treatment IS NULL OR :treatment = '' OR LOWER(a.treatment) = LOWER(:treatment))
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
               AND (:status IS NULL OR a.status = :status)
             """)
     Page<Appointment> findFilteredAndSearched(
             @Param("search") String search,
             @Param("date") LocalDate date,
             @Param("patientId") Long patientId,
-            @Param("dentist") String dentist,
-            @Param("treatment") String treatment,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
             @Param("status") AppointmentStatus status,
             Pageable pageable);
 
-    List<Appointment> findByDentistAndAppointmentDateAndStatusNot(
-            String dentist, LocalDate date, AppointmentStatus status);
+    List<Appointment> findByDentistIdAndAppointmentDateAndStatusNot(
+            Long dentistId, LocalDate date, AppointmentStatus status);
+
+    boolean existsByDentistId(Long dentistId);
+
+    boolean existsByTreatmentId(Long treatmentId);
+
+    long countByDentistIdAndAppointmentDateAndStatusNot(
+            Long dentistId, LocalDate date, AppointmentStatus status);
 
     List<Appointment> findByPatientIdAndAppointmentDateAndStatusNot(
             Long patientId, LocalDate date, AppointmentStatus status);

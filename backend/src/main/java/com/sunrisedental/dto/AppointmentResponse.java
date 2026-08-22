@@ -16,7 +16,11 @@ public class AppointmentResponse {
     private String patientName;
     private String patientPhone;
     private String patientEmail;
+    private Long dentistId;
+    private String dentistName;
     private String dentist;
+    private Long treatmentId;
+    private String treatmentName;
     private String treatment;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
@@ -46,10 +50,22 @@ public class AppointmentResponse {
     public String getPatientEmail() { return patientEmail; }
     public void setPatientEmail(String patientEmail) { this.patientEmail = patientEmail; }
 
-    public String getDentist() { return dentist; }
+    public Long getDentistId() { return dentistId; }
+    public void setDentistId(Long dentistId) { this.dentistId = dentistId; }
+
+    public String getDentistName() { return dentistName; }
+    public void setDentistName(String dentistName) { this.dentistName = dentistName; }
+
+    public String getDentist() { return dentist != null ? dentist : dentistName; }
     public void setDentist(String dentist) { this.dentist = dentist; }
 
-    public String getTreatment() { return treatment; }
+    public Long getTreatmentId() { return treatmentId; }
+    public void setTreatmentId(Long treatmentId) { this.treatmentId = treatmentId; }
+
+    public String getTreatmentName() { return treatmentName; }
+    public void setTreatmentName(String treatmentName) { this.treatmentName = treatmentName; }
+
+    public String getTreatment() { return treatment != null ? treatment : treatmentName; }
     public void setTreatment(String treatment) { this.treatment = treatment; }
 
     public LocalDate getAppointmentDate() { return appointmentDate; }

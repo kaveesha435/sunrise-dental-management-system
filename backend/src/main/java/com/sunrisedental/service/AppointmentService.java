@@ -15,8 +15,8 @@ public interface AppointmentService {
             String search,
             LocalDate date,
             Long patientId,
-            String dentist,
-            String treatment,
+            Long dentistId,
+            Long treatmentId,
             String status,
             int page,
             int size,
@@ -29,7 +29,7 @@ public interface AppointmentService {
 
     AppointmentResponse cancel(Long id);
 
-    boolean checkDentistAvailability(String dentist, LocalDate date, LocalTime time, Integer duration, Long excludeId);
+    boolean checkDentistAvailability(Long dentistId, LocalDate date, LocalTime time, Integer duration, Long excludeId);
 
     AppointmentSummary getSummary();
 

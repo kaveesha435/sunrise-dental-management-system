@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "appointments", indexes = {
         @Index(name = "idx_appointment_date", columnList = "appointment_date"),
-        @Index(name = "idx_appointment_dentist", columnList = "dentist"),
+        @Index(name = "idx_appointment_dentist_id", columnList = "dentist_id"),
         @Index(name = "idx_appointment_status", columnList = "status")
 })
 @Getter
@@ -34,11 +34,13 @@ public class Appointment {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @Column(nullable = false, length = 100)
-    private String dentist;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "dentist_id", nullable = false)
+    private Dentist dentist;
 
-    @Column(nullable = false, length = 100)
-    private String treatment;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "treatment_id", nullable = false)
+    private Treatment treatment;
 
     @Column(name = "appointment_date", nullable = false)
     private LocalDate appointmentDate;

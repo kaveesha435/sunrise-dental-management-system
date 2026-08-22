@@ -4,7 +4,9 @@ import com.sunrisedental.dto.AppointmentSummaryDto;
 import com.sunrisedental.dto.DashboardStatsDto;
 import com.sunrisedental.dto.WeeklyChartDto;
 import com.sunrisedental.entity.Appointment;
+import com.sunrisedental.entity.AvailabilityStatus;
 import com.sunrisedental.repository.AppointmentRepository;
+import com.sunrisedental.repository.DentistRepository;
 import com.sunrisedental.repository.PatientRepository;
 import com.sunrisedental.service.DashboardService;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +46,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
+    private final DentistRepository dentistRepository;
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
 
@@ -51,12 +54,13 @@ public class DashboardServiceImpl implements DashboardService {
     public DashboardStatsDto getStats() {
         long totalPatients = patientRepository.count();
         long todayApptsCount = appointmentRepository.countTodayAppointments(LocalDate.now());
+        long activeAvailableDentists = dentistRepository.countByAvailabilityStatusAndActiveTrue(AvailabilityStatus.AVAILABLE);
         
         return DashboardStatsDto.builder()
                 .todayAppointments((int) todayApptsCount)
                 .totalPatients(totalPatients)
                 .todayRevenue(new BigDecimal("24500.00")) // Billing not implemented yet
-                .availableDentists(3) // Dentist management not implemented yet
+                .availableDentists((int) activeAvailableDentists)
                 .build();
     }
 
@@ -64,8 +68,11 @@ public class DashboardServiceImpl implements DashboardService {
     public List<AppointmentSummaryDto> getTodayAppointments() {
         List<Appointment> appts = appointmentRepository.findTodayAppointmentsList(LocalDate.now());
         return appts.stream()
-                .map(a -> appt(a.getId(), a.getPatient().getFullName(), a.getDentist(), 
-                        a.getAppointmentTime().format(TIME_FORMATTER), a.getTreatment(), a.getStatus().name()))
+                .map(a -> appt(a.getId(), a.getPatient().getFullName(), 
+                        a.getDentist() != null ? a.getDentist().getName() : "—", 
+                        a.getAppointmentTime().format(TIME_FORMATTER), 
+                        a.getTreatment() != null ? a.getTreatment().getName() : "—", 
+                        a.getStatus().name()))
                 .toList();
     }
 
@@ -74,9 +81,11 @@ public class DashboardServiceImpl implements DashboardService {
         List<Appointment> appts = appointmentRepository.findUpcomingAppointments(
                 LocalDate.now(), LocalTime.now(), PageRequest.of(0, 5));
         return appts.stream()
-                .map(a -> appt(a.getId(), a.getPatient().getFullName(), a.getDentist(), 
+                .map(a -> appt(a.getId(), a.getPatient().getFullName(), 
+                        a.getDentist() != null ? a.getDentist().getName() : "—", 
                         a.getAppointmentDate().toString() + " · " + a.getAppointmentTime().format(TIME_FORMATTER), 
-                        a.getTreatment(), a.getStatus().name()))
+                        a.getTreatment() != null ? a.getTreatment().getName() : "—", 
+                        a.getStatus().name()))
                 .toList();
     }
 

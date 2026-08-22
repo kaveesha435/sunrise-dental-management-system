@@ -10,23 +10,8 @@ import patientService from '../services/patientService';
 import { formatDate } from '../utils/formatters';
 import './NewAppointmentPage.css';
 
-const DENTIST_OPTIONS = [
-  { value: 'Dr. D. Perera', label: 'Dr. D. Perera' },
-  { value: 'Dr. L. Wijesinghe', label: 'Dr. L. Wijesinghe' },
-  { value: 'Dr. S. Fernando', label: 'Dr. S. Fernando' }
-];
-
-const TREATMENT_OPTIONS = [
-  { value: 'Teeth Cleaning', label: 'Teeth Cleaning' },
-  { value: 'Root Canal', label: 'Root Canal' },
-  { value: 'Filling', label: 'Filling' },
-  { value: 'Extraction', label: 'Extraction' },
-  { value: 'Consultation', label: 'Consultation' },
-  { value: 'Whitening', label: 'Whitening' },
-  { value: 'Check-up', label: 'Check-up' },
-  { value: 'Braces Adjust', label: 'Braces Adjust' },
-  { value: 'Follow-up', label: 'Follow-up' }
-];
+import dentistService from '../services/dentistService';
+import treatmentService from '../services/treatmentService';
 
 const STATUS_OPTIONS = [
   { value: 'SCHEDULED', label: 'Scheduled' },
@@ -63,8 +48,8 @@ export default function NewAppointmentPage() {
 
   const [form, setForm] = useState({
     patientId: '',
-    dentist: 'Dr. D. Perera',
-    treatment: 'Consultation',
+    dentist: '',
+    treatment: '',
     appointmentDate: '',
     appointmentTime: '',
     duration: '30',
@@ -72,10 +57,40 @@ export default function NewAppointmentPage() {
     notes: ''
   });
 
+  const [dentistOptions, setDentistOptions] = useState([]);
+  const [treatmentOptions, setTreatmentOptions] = useState([]);
+
   // Availability State
   const [availability, setAvailability] = useState('EMPTY'); // EMPTY | CHECKING | AVAILABLE | UNAVAILABLE
 
   const searchTimeout = useRef(null);
+
+  // Load dropdown options on mount
+  useEffect(() => {
+    dentistService.getActiveDentists()
+      .then((res) => {
+        const list = res.data?.data ?? [];
+        const options = list.map(d => ({ value: d.id.toString(), label: d.name }));
+        setDentistOptions(options);
+        // Default to first dentist if not editing
+        if (!isEdit && options.length > 0) {
+          setForm(prev => ({ ...prev, dentist: options[0].value }));
+        }
+      })
+      .catch(() => {});
+
+    treatmentService.getActiveTreatments()
+      .then((res) => {
+        const list = res.data?.data ?? [];
+        const options = list.map(t => ({ value: t.id.toString(), label: t.name }));
+        setTreatmentOptions(options);
+        // Default to first treatment if not editing
+        if (!isEdit && options.length > 0) {
+          setForm(prev => ({ ...prev, treatment: options[0].value }));
+        }
+      })
+      .catch(() => {});
+  }, [isEdit]);
 
   // Load appointment details if in edit/reschedule mode
   useEffect(() => {
@@ -87,8 +102,8 @@ export default function NewAppointmentPage() {
         if (appt) {
           setForm({
             patientId: appt.patientId,
-            dentist: appt.dentist,
-            treatment: appt.treatment,
+            dentist: appt.dentistId.toString(),
+            treatment: appt.treatmentId.toString(),
             appointmentDate: appt.appointmentDate,
             appointmentTime: appt.appointmentTime.substring(0, 5), // Keep only HH:MM
             duration: appt.duration.toString(),
@@ -231,8 +246,8 @@ export default function NewAppointmentPage() {
     try {
       const payload = {
         patientId: form.patientId,
-        dentist: form.dentist,
-        treatment: form.treatment,
+        dentistId: parseInt(form.dentist, 10),
+        treatmentId: parseInt(form.treatment, 10),
         appointmentDate: form.appointmentDate,
         appointmentTime: form.appointmentTime + ':00', // Ensure HH:MM:SS format
         duration: parseInt(form.duration, 10),
@@ -395,7 +410,7 @@ export default function NewAppointmentPage() {
                   id="dentist"
                   name="dentist"
                   label="Assign Dentist"
-                  options={DENTIST_OPTIONS}
+                  options={dentistOptions}
                   value={form.dentist}
                   onChange={handleChange}
                   error={errors.dentist}
@@ -431,7 +446,7 @@ export default function NewAppointmentPage() {
                   id="treatment"
                   name="treatment"
                   label="Select Treatment"
-                  options={TREATMENT_OPTIONS}
+                  options={treatmentOptions}
                   value={form.treatment}
                   onChange={handleChange}
                   error={errors.treatment}

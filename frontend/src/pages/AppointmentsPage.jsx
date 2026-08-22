@@ -14,30 +14,12 @@ import ErrorState from '../components/common/ErrorState';
 import Input from '../components/common/Input';
 import { useToast } from '../components/common/Toast';
 import appointmentService from '../services/appointmentService';
+import dentistService from '../services/dentistService';
+import treatmentService from '../services/treatmentService';
 import { formatDate } from '../utils/formatters';
 import './AppointmentsPage.css';
 
 const PAGE_SIZE = 10;
-
-const DENTIST_OPTIONS = [
-  { value: '', label: 'All Dentists' },
-  { value: 'Dr. D. Perera', label: 'Dr. D. Perera' },
-  { value: 'Dr. L. Wijesinghe', label: 'Dr. L. Wijesinghe' },
-  { value: 'Dr. S. Fernando', label: 'Dr. S. Fernando' }
-];
-
-const TREATMENT_OPTIONS = [
-  { value: '', label: 'All Treatments' },
-  { value: 'Teeth Cleaning', label: 'Teeth Cleaning' },
-  { value: 'Root Canal', label: 'Root Canal' },
-  { value: 'Filling', label: 'Filling' },
-  { value: 'Extraction', label: 'Extraction' },
-  { value: 'Consultation', label: 'Consultation' },
-  { value: 'Whitening', label: 'Whitening' },
-  { value: 'Check-up', label: 'Check-up' },
-  { value: 'Braces Adjust', label: 'Braces Adjust' },
-  { value: 'Follow-up', label: 'Follow-up' }
-];
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Statuses' },
@@ -80,6 +62,10 @@ export default function AppointmentsPage() {
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState('');
 
+  // Dynamic Options
+  const [dentistOptions, setDentistOptions] = useState([{ value: '', label: 'All Dentists' }]);
+  const [treatmentOptions, setTreatmentOptions] = useState([{ value: '', label: 'All Treatments' }]);
+
   // Cancellation Modal
   const [cancelTarget, setCancelTarget] = useState(null);
   const [cancelling, setCancelling] = useState(false);
@@ -116,8 +102,8 @@ export default function AppointmentsPage() {
       const res = await appointmentService.getAll({
         search: debouncedSearch,
         date: dateFilter,
-        dentist: dentistFilter,
-        treatment: treatmentFilter,
+        dentistId: dentistFilter,
+        treatmentId: treatmentFilter,
         status: statusFilter,
         page: currentPage - 1,
         size: PAGE_SIZE,
@@ -134,6 +120,29 @@ export default function AppointmentsPage() {
       setListLoading(false);
     }
   }, [debouncedSearch, dateFilter, dentistFilter, treatmentFilter, statusFilter, currentPage, sortVal]);
+
+  // Load dropdown options
+  useEffect(() => {
+    dentistService.getActiveDentists()
+      .then(res => {
+        const list = res.data?.data ?? [];
+        setDentistOptions([
+          { value: '', label: 'All Dentists' },
+          ...list.map(d => ({ value: d.id.toString(), label: d.name }))
+        ]);
+      })
+      .catch(() => {});
+
+    treatmentService.getActiveTreatments()
+      .then(res => {
+        const list = res.data?.data ?? [];
+        setTreatmentOptions([
+          { value: '', label: 'All Treatments' },
+          ...list.map(t => ({ value: t.id.toString(), label: t.name }))
+        ]);
+      })
+      .catch(() => {});
+  }, []);
 
   const loadTimeline = useCallback(async () => {
     try {
@@ -263,7 +272,7 @@ export default function AppointmentsPage() {
                 <div className="appointments-page__filter-item">
                   <Select
                     id="filter-dentist"
-                    options={DENTIST_OPTIONS}
+                    options={dentistOptions}
                     value={dentistFilter}
                     onChange={handleFilterChange(setDentistFilter)}
                   />
@@ -271,7 +280,7 @@ export default function AppointmentsPage() {
                 <div className="appointments-page__filter-item">
                   <Select
                     id="filter-treatment"
-                    options={TREATMENT_OPTIONS}
+                    options={treatmentOptions}
                     value={treatmentFilter}
                     onChange={handleFilterChange(setTreatmentFilter)}
                   />
