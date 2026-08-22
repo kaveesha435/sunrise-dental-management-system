@@ -5,10 +5,14 @@ import com.sunrisedental.dto.AppointmentResponse;
 import com.sunrisedental.dto.PagedResponse;
 import com.sunrisedental.entity.Appointment;
 import com.sunrisedental.entity.AppointmentStatus;
+import com.sunrisedental.entity.Dentist;
 import com.sunrisedental.entity.Patient;
+import com.sunrisedental.entity.Treatment;
 import com.sunrisedental.exception.ResourceNotFoundException;
 import com.sunrisedental.repository.AppointmentRepository;
+import com.sunrisedental.repository.DentistRepository;
 import com.sunrisedental.repository.PatientRepository;
+import com.sunrisedental.repository.TreatmentRepository;
 import com.sunrisedental.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +33,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
+    private final DentistRepository dentistRepository;
+    private final TreatmentRepository treatmentRepository;
 
     @Override
     @Transactional
@@ -37,18 +43,32 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", "id", request.getPatientId()));
 
-        // 2. Validate Date and Time (must be in the future)
+        // 2. Fetch Dentist & check if active
+        Dentist dentist = dentistRepository.findById(request.getDentistId())
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist", "id", request.getDentistId()));
+        if (!dentist.isActive()) {
+            throw new IllegalArgumentException("Selected dentist is not active in the system.");
+        }
+
+        // 3. Fetch Treatment & check if active
+        Treatment treatment = treatmentRepository.findById(request.getTreatmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Treatment", "id", request.getTreatmentId()));
+        if (!treatment.isActive()) {
+            throw new IllegalArgumentException("Selected treatment is not active in the system.");
+        }
+
+        // 4. Validate Date and Time (must be in the future)
         validateDateTimeInFuture(request.getAppointmentDate(), request.getAppointmentTime());
 
-        // 3. Check Dentist Double Booking
-        checkDentistDoubleBooking(request.getDentist(), request.getAppointmentDate(),
+        // 5. Check Dentist Double Booking
+        checkDentistDoubleBooking(dentist.getId(), request.getAppointmentDate(),
                 request.getAppointmentTime(), request.getDuration(), null);
 
-        // 4. Check Patient Conflict
+        // 6. Check Patient Conflict
         checkPatientConflict(request.getPatientId(), request.getAppointmentDate(),
                 request.getAppointmentTime(), request.getDuration(), null);
 
-        // 5. Build and Save first to get auto-increment ID
+        // 7. Build and Save first to get auto-increment ID
         AppointmentStatus initialStatus = AppointmentStatus.SCHEDULED;
         if (request.getStatus() != null) {
             try {
@@ -60,8 +80,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = Appointment.builder()
                 .patient(patient)
-                .dentist(request.getDentist())
-                .treatment(request.getTreatment())
+                .dentist(dentist)
+                .treatment(treatment)
                 .appointmentDate(request.getAppointmentDate())
                 .appointmentTime(request.getAppointmentTime())
                 .duration(request.getDuration())
@@ -85,8 +105,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             String search,
             LocalDate date,
             Long patientId,
-            String dentist,
-            String treatment,
+            Long dentistId,
+            Long treatmentId,
             String status,
             int page,
             int size,
@@ -104,12 +124,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             try {
                 apptStatus = AppointmentStatus.valueOf(status.toUpperCase());
             } catch (IllegalArgumentException e) {
-                // ignore or propagate
+                // ignore
             }
         }
 
         Page<Appointment> resultPage = appointmentRepository.findFilteredAndSearched(
-                search, date, patientId, dentist, treatment, apptStatus, pageable);
+                search, date, patientId, dentistId, treatmentId, apptStatus, pageable);
 
         return new PagedResponse<>(
                 resultPage.getContent().stream().map(this::toResponse).toList(),
@@ -138,7 +158,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         validateDateTimeInFuture(request.getAppointmentDate(), request.getAppointmentTime());
 
         // Check Dentist Double Booking
-        checkDentistDoubleBooking(request.getDentist(), request.getAppointmentDate(),
+        checkDentistDoubleBooking(request.getDentistId(), request.getAppointmentDate(),
                 request.getAppointmentTime(), request.getDuration(), id);
 
         // Check Patient Conflict
@@ -148,9 +168,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", "id", request.getPatientId()));
 
+        Dentist dentist = dentistRepository.findById(request.getDentistId())
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist", "id", request.getDentistId()));
+        if (!dentist.isActive()) {
+            throw new IllegalArgumentException("Selected dentist is not active in the system.");
+        }
+
+        Treatment treatment = treatmentRepository.findById(request.getTreatmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Treatment", "id", request.getTreatmentId()));
+        if (!treatment.isActive()) {
+            throw new IllegalArgumentException("Selected treatment is not active in the system.");
+        }
+
         appointment.setPatient(patient);
-        appointment.setDentist(request.getDentist());
-        appointment.setTreatment(request.getTreatment());
+        appointment.setDentist(dentist);
+        appointment.setTreatment(treatment);
         appointment.setAppointmentDate(request.getAppointmentDate());
         appointment.setAppointmentTime(request.getAppointmentTime());
         appointment.setDuration(request.getDuration());
@@ -182,9 +214,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional(readOnly = true)
     public boolean checkDentistAvailability(
-            String dentist, LocalDate date, LocalTime time, Integer duration, Long excludeId) {
+            Long dentistId, LocalDate date, LocalTime time, Integer duration, Long excludeId) {
         try {
-            checkDentistDoubleBooking(dentist, date, time, duration, excludeId);
+            checkDentistDoubleBooking(dentistId, date, time, duration, excludeId);
             return true;
         } catch (IllegalArgumentException e) {
             return false;
@@ -212,10 +244,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private void checkDentistDoubleBooking(
-            String dentist, LocalDate date, LocalTime time, Integer duration, Long excludeId) {
+            Long dentistId, LocalDate date, LocalTime time, Integer duration, Long excludeId) {
 
         List<Appointment> existing = appointmentRepository
-                .findByDentistAndAppointmentDateAndStatusNot(dentist, date, AppointmentStatus.CANCELLED);
+                .findByDentistIdAndAppointmentDateAndStatusNot(dentistId, date, AppointmentStatus.CANCELLED);
 
         LocalTime newStart = time;
         LocalTime newEnd = newStart.plusMinutes(duration);
@@ -229,8 +261,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             if (newStart.isBefore(end) && newEnd.isAfter(start)) {
                 throw new IllegalArgumentException(String.format(
-                        "Dentist %s is already booked between %s and %s on this date.",
-                        dentist, start, end));
+                        "Dentist is already booked between %s and %s on this date.",
+                        start, end));
             }
         }
     }
@@ -267,8 +299,18 @@ public class AppointmentServiceImpl implements AppointmentService {
         res.setPatientName(appt.getPatient().getFullName());
         res.setPatientPhone(appt.getPatient().getContactNumber());
         res.setPatientEmail(appt.getPatient().getEmail());
-        res.setDentist(appt.getDentist());
-        res.setTreatment(appt.getTreatment());
+        
+        if (appt.getDentist() != null) {
+            res.setDentistId(appt.getDentist().getId());
+            res.setDentistName(appt.getDentist().getName());
+            res.setDentist(appt.getDentist().getName());
+        }
+        if (appt.getTreatment() != null) {
+            res.setTreatmentId(appt.getTreatment().getId());
+            res.setTreatmentName(appt.getTreatment().getName());
+            res.setTreatment(appt.getTreatment().getName());
+        }
+        
         res.setAppointmentDate(appt.getAppointmentDate());
         res.setAppointmentTime(appt.getAppointmentTime());
         res.setDuration(appt.getDuration());

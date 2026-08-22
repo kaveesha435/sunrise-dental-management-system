@@ -36,8 +36,8 @@ public class AppointmentController {
             @RequestParam(defaultValue = "") String search,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(required = false) Long patientId,
-            @RequestParam(defaultValue = "") String dentist,
-            @RequestParam(defaultValue = "") String treatment,
+            @RequestParam(required = false) Long dentistId,
+            @RequestParam(required = false) Long treatmentId,
             @RequestParam(defaultValue = "") String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -45,7 +45,7 @@ public class AppointmentController {
             @RequestParam(defaultValue = "desc") String sortDir) {
 
         PagedResponse<AppointmentResponse> result = appointmentService.getAll(
-                search, date, patientId, dentist, treatment, status, page, size, sortBy, sortDir);
+                search, date, patientId, dentistId, treatmentId, status, page, size, sortBy, sortDir);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
@@ -71,13 +71,13 @@ public class AppointmentController {
 
     @GetMapping("/dentist-availability")
     public ResponseEntity<ApiResponse<Boolean>> checkAvailability(
-            @RequestParam String dentist,
+            @RequestParam Long dentistId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time,
             @RequestParam Integer duration,
             @RequestParam(required = false) Long excludeId) {
 
-        boolean isAvailable = appointmentService.checkDentistAvailability(dentist, date, time, duration, excludeId);
+        boolean isAvailable = appointmentService.checkDentistAvailability(dentistId, date, time, duration, excludeId);
         return ResponseEntity.ok(ApiResponse.success(isAvailable));
     }
 

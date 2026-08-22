@@ -1,0 +1,268 @@
+/* ── Treatments Catalogue Styles ── */
+
+.treatments-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.treatments-page__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.treatments-page__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-card);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.treatments-page__toolbar-right {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* Table layout styling */
+.treatments-table-card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.treatments-table-wrapper {
+  overflow-x: auto;
+}
+
+.treatments-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.treatments-table th,
+.treatments-table td {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  font-size: var(--font-size-body);
+}
+
+.treatments-table th {
+  background: #F8FAFC;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.treatments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.treatments-table tr:hover td {
+  background-color: #F8FAFC;
+}
+
+.treatment-name-cell {
+  color: var(--color-text-primary);
+}
+
+.treatment-desc-cell {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.treatment-cost-cell {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Actions */
+.treatments-table__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.table-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.table-action-btn:hover {
+  background: #F1F5F9;
+  color: var(--color-text-primary);
+  border-color: #CBD5E1;
+}
+
+.table-action-btn--danger:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.table-action-btn .svg-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Pagination / Footer */
+.treatments-table-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Form Styles */
+.treatment-form-body {
+  margin-top: var(--space-2);
+}
+
+.treatment-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.active-checkbox-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  grid-column: span 2;
+  margin-top: var(--space-2);
+}
+
+.active-checkbox-field label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-small);
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.checkbox-wrapper span {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+/* Active Badge in Table */
+.active-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+}
+
+.active-badge--true {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(22, 163, 74, 0.15);
+}
+
+.active-badge--false {
+  background-color: #F1F5F9;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+/* Delete Confirm Modal styles */
+.delete-confirm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.delete-confirm-body {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-2) 0;
+}
+
+.delete-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.delete-confirm-icon .svg-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.delete-confirm-text strong {
+  display: block;
+  font-size: var(--font-size-card-title);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.delete-confirm-text p {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+/* Textarea customization */
+.new-patient-textarea--error {
+  border-color: var(--color-error) !important;
+}
+
+/* Responsive Toolbar */
+@media (max-width: 1024px) {
+  .treatments-page__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .treatments-page__toolbar-right {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+  
+  .treatments-page__toolbar-right > * {
+    flex: 1 1 200px;
+  }
+}

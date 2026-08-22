@@ -8,8 +8,10 @@ const appointmentService = {
   /**
    * Get all appointments (paginated and filtered).
    */
-  getAll({ search = '', date = '', patientId = '', dentist = '', treatment = '', status = '', page = 0, size = 10, sortBy = 'appointmentDate', sortDir = 'desc' } = {}) {
-    const params = { search, dentist, treatment, status, page, size, sortBy, sortDir };
+  getAll({ search = '', date = '', patientId = '', dentistId = '', treatmentId = '', status = '', page = 0, size = 10, sortBy = 'appointmentDate', sortDir = 'desc' } = {}) {
+    const params = { search, status, page, size, sortBy, sortDir };
+    if (dentistId) params.dentistId = dentistId;
+    if (treatmentId) params.treatmentId = treatmentId;
     if (date) params.date = date;
     if (patientId) params.patientId = patientId;
     
@@ -47,8 +49,8 @@ const appointmentService = {
   /**
    * Check if dentist is available for a time slot.
    */
-  checkAvailability(dentist, date, time, duration, excludeId = null) {
-    const params = { dentist, date, time, duration };
+  checkAvailability(dentistId, date, time, duration, excludeId = null) {
+    const params = { dentistId, date, time, duration };
     if (excludeId) params.excludeId = excludeId;
     return api.get('/appointments/dentist-availability', { params });
   },
