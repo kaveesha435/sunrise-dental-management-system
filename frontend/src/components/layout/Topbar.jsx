@@ -34,7 +34,13 @@ export default function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const pageTitle = PAGE_TITLES[location.pathname] ?? 'Sunrise Dental';
+  let pageTitle = PAGE_TITLES[location.pathname];
+  if (!pageTitle && location.pathname.startsWith('/billing/receipt/')) {
+    pageTitle = 'Billing Receipt';
+  }
+  if (!pageTitle) {
+    pageTitle = 'Sunrise Dental';
+  }
 
   const displayName = user
     ? `${user.username}`

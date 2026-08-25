@@ -6,6 +6,7 @@ import com.sunrisedental.dto.WeeklyChartDto;
 import com.sunrisedental.entity.Appointment;
 import com.sunrisedental.entity.AvailabilityStatus;
 import com.sunrisedental.repository.AppointmentRepository;
+import com.sunrisedental.repository.BillRepository;
 import com.sunrisedental.repository.DentistRepository;
 import com.sunrisedental.repository.PatientRepository;
 import com.sunrisedental.service.DashboardService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -47,6 +49,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
     private final DentistRepository dentistRepository;
+    private final BillRepository billRepository;
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
 
@@ -56,10 +59,17 @@ public class DashboardServiceImpl implements DashboardService {
         long todayApptsCount = appointmentRepository.countTodayAppointments(LocalDate.now());
         long activeAvailableDentists = dentistRepository.countByAvailabilityStatusAndActiveTrue(AvailabilityStatus.AVAILABLE);
         
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+        BigDecimal todayRevenue = billRepository.sumRevenueForPeriod(startOfDay, endOfDay);
+        if (todayRevenue == null) {
+            todayRevenue = BigDecimal.ZERO;
+        }
+
         return DashboardStatsDto.builder()
                 .todayAppointments((int) todayApptsCount)
                 .totalPatients(totalPatients)
-                .todayRevenue(new BigDecimal("24500.00")) // Billing not implemented yet
+                .todayRevenue(todayRevenue)
                 .availableDentists((int) activeAvailableDentists)
                 .build();
     }

@@ -66,7 +66,7 @@ export default function App() {
               <Route path="/dentists"             element={<DentistsPage />} />
               <Route path="/treatments"           element={<TreatmentsPage />} />
               <Route path="/billing"              element={<BillingPage />} />
-              <Route path="/billing/receipt"      element={<BillingReceiptPage />} />
+              <Route path="/billing/receipt/:id"  element={<BillingReceiptPage />} />
               <Route path="/reports"              element={<ReportsPage />} />
               <Route path="/help"                 element={<HelpPage />} />
             </Route>
