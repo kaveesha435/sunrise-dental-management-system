@@ -1,0 +1,318 @@
+.billing-page {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.billing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .billing-grid {
+    grid-template-columns: 400px 1fr;
+  }
+}
+
+.billing-card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: fit-content;
+}
+
+.billing-card__title {
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.billing-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+}
+
+.billing-search-wrapper {
+  position: relative;
+}
+
+.appt-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: var(--z-dropdown);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-lg);
+  margin: var(--space-1) 0 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.appt-search-dropdown__item {
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  transition: background var(--transition-fast);
+}
+
+.appt-search-dropdown__item:last-child {
+  border-bottom: none;
+}
+
+.appt-search-dropdown__item:hover {
+  background: var(--color-bg);
+}
+
+.appt-search-dropdown__main {
+  display: flex;
+  justify-content: space-between;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.appt-search-dropdown__num {
+  color: var(--color-primary);
+}
+
+.appt-search-dropdown__patient {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.appt-search-dropdown__meta {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.billing-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  animation: fadeIn var(--transition-normal);
+}
+
+.billing-details-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.billing-details-group__title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+}
+
+.billing-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  background: var(--color-bg);
+  padding: var(--space-3);
+  border-radius: var(--radius-input);
+}
+
+.billing-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.billing-detail__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.billing-detail__value {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  word-break: break-word;
+}
+
+.billing-calculation-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-bg);
+  padding: var(--space-4);
+  border-radius: var(--radius-input);
+  border: 1px dashed var(--color-border);
+}
+
+.billing-calc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  align-items: center;
+}
+
+.billing-calc-row strong {
+  color: var(--color-text-primary);
+}
+
+.billing-calc-input-row {
+  margin-top: var(--space-1);
+}
+
+.billing-calc-input-row .input-field {
+  margin-bottom: 0;
+}
+
+.billing-calc-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.billing-calc-row--subtotal {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.billing-calc-row--total {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.billing-total-amount {
+  color: var(--color-primary);
+}
+
+.billing-payment-status-row {
+  margin-top: var(--space-1);
+}
+
+.billing-form-actions {
+  margin-top: var(--space-2);
+}
+
+.billing-history-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .billing-history-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.billing-history-filters {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-end;
+}
+
+.billing-history-search {
+  width: 220px;
+}
+
+.billing-history-status {
+  width: 150px;
+}
+
+.billing-table-wrapper {
+  overflow-x: auto;
+  margin: 0 calc(-1 * var(--space-6));
+  padding: 0 var(--space-6);
+}
+
+.billing-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.billing-table th {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.billing-table td {
+  padding: var(--space-4);
+  font-size: var(--font-size-body);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.billing-table__row:hover {
+  background: var(--color-bg);
+}
+
+.billing-table__cell--receipt {
+  font-family: monospace;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.billing-table__cell--total {
+  font-weight: var(--font-weight-semibold);
+}
+
+.billing-table__patient-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-table__patient-name {
+  font-weight: var(--font-weight-medium);
+}
+
+.billing-table__patient-phone {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.billing-pagination-wrapper {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
