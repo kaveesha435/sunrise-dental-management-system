@@ -1,0 +1,127 @@
+.help-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.help-search-container {
+  background-color: var(--surface-color);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.help-search-input input {
+  font-size: 1.1rem;
+  padding: 1rem;
+}
+
+.help-category-section {
+  margin-bottom: 2.5rem;
+}
+
+.help-category-title {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.accordion-item {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.accordion-item:hover {
+  border-color: var(--primary-color);
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.accordion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.accordion-item.open .accordion-icon {
+  transform: rotate(180deg);
+  color: var(--primary-color);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: var(--gray-50);
+}
+
+.accordion-item.open .accordion-content {
+  max-height: 500px; /* arbitrary max height for transition */
+}
+
+.accordion-content-inner {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.accordion-content-inner p {
+  margin-bottom: 0.5rem;
+}
+
+.accordion-content-inner p:last-child {
+  margin-bottom: 0;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--surface-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+}
+
+.clear-search-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--gray-200);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.clear-search-btn:hover {
+  background-color: var(--gray-300);
+}
