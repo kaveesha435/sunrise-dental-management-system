@@ -76,4 +76,91 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             GROUP BY a.appointmentDate
             """)
     List<Object[]> getWeeklyStats(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query("""
+            SELECT COUNT(a) FROM Appointment a
+            WHERE (CAST(:startDate AS date) IS NULL OR a.appointmentDate >= :startDate)
+              AND (CAST(:endDate AS date) IS NULL OR a.appointmentDate <= :endDate)
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
+              AND (:status IS NULL OR a.status = :status)
+            """)
+    long countReportAppointments(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
+            @Param("status") AppointmentStatus status);
+
+    @Query("""
+            SELECT a.treatment.name, COUNT(a), COALESCE(SUM(b.total), 0)
+            FROM Appointment a
+            LEFT JOIN Bill b ON b.appointment = a
+            WHERE (CAST(:startDate AS date) IS NULL OR a.appointmentDate >= :startDate)
+              AND (CAST(:endDate AS date) IS NULL OR a.appointmentDate <= :endDate)
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
+              AND (:status IS NULL OR a.status = :status)
+            GROUP BY a.treatment.name
+            """)
+    List<Object[]> getTreatmentReportData(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
+            @Param("status") AppointmentStatus status);
+
+    @Query("""
+            SELECT a.appointmentDate, COUNT(a)
+            FROM Appointment a
+            WHERE (CAST(:startDate AS date) IS NULL OR a.appointmentDate >= :startDate)
+              AND (CAST(:endDate AS date) IS NULL OR a.appointmentDate <= :endDate)
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
+              AND (:status IS NULL OR a.status = :status)
+            GROUP BY a.appointmentDate
+            ORDER BY a.appointmentDate ASC
+            """)
+    List<Object[]> getDailyAppointmentVolume(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
+            @Param("status") AppointmentStatus status);
+
+    @Query("""
+            SELECT a.appointmentDate, COALESCE(SUM(b.total), 0)
+            FROM Appointment a
+            JOIN Bill b ON b.appointment = a
+            WHERE (CAST(:startDate AS date) IS NULL OR a.appointmentDate >= :startDate)
+              AND (CAST(:endDate AS date) IS NULL OR a.appointmentDate <= :endDate)
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
+              AND (:status IS NULL OR a.status = :status)
+            GROUP BY a.appointmentDate
+            ORDER BY a.appointmentDate ASC
+            """)
+    List<Object[]> getDailyRevenueTrend(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
+            @Param("status") AppointmentStatus status);
+
+    @Query("""
+            SELECT COALESCE(SUM(b.total), 0)
+            FROM Appointment a
+            JOIN Bill b ON b.appointment = a
+            WHERE (CAST(:startDate AS date) IS NULL OR a.appointmentDate >= :startDate)
+              AND (CAST(:endDate AS date) IS NULL OR a.appointmentDate <= :endDate)
+              AND (:dentistId IS NULL OR a.dentist.id = :dentistId)
+              AND (:treatmentId IS NULL OR a.treatment.id = :treatmentId)
+              AND (:status IS NULL OR a.status = :status)
+            """)
+    java.math.BigDecimal getTotalRevenue(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("dentistId") Long dentistId,
+            @Param("treatmentId") Long treatmentId,
+            @Param("status") AppointmentStatus status);
 }
