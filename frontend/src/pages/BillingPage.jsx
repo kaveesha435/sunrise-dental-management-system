@@ -47,7 +47,6 @@ export default function BillingPage() {
   // Billing history state
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(true);
-  const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [historySearch, setHistorySearch] = useState('');
@@ -71,7 +70,6 @@ export default function BillingPage() {
       });
       const data = res.data?.data;
       setHistory(data?.content ?? []);
-      setTotalItems(data?.totalElements ?? 0);
       setTotalPages(data?.totalPages ?? 0);
     } catch (err) {
       console.error('Failed to load billing history:', err);
