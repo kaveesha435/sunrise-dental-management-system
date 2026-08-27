@@ -1,0 +1,288 @@
+/* ============================================================
+   Dashboard Page
+   ============================================================ */
+.dashboard-page {
+  max-width: 1280px;
+}
+
+/* -------------------------------------------------------
+   Stat grid (4 columns → 2 → 1 on smaller screens)
+------------------------------------------------------- */
+.dashboard-page__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+@media (max-width: 1100px) {
+  .dashboard-page__stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .dashboard-page__stats { grid-template-columns: 1fr; }
+}
+
+/* -------------------------------------------------------
+   Middle row: Chart (2/3) + Quick Actions (1/3)
+------------------------------------------------------- */
+.dashboard-page__middle {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+@media (max-width: 960px) {
+  .dashboard-page__middle { grid-template-columns: 1fr; }
+}
+
+/* -------------------------------------------------------
+   Bottom row: Today's Appointments (2/3) + Upcoming (1/3)
+------------------------------------------------------- */
+.dashboard-page__bottom {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-5);
+}
+
+@media (max-width: 960px) {
+  .dashboard-page__bottom { grid-template-columns: 1fr; }
+}
+
+/* -------------------------------------------------------
+   Panel (reusable card shell)
+------------------------------------------------------- */
+.dashboard-panel {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-panel__header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.dashboard-panel__title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.dashboard-panel__subtitle {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.dashboard-panel__link {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dashboard-panel__link:hover {
+  text-decoration: underline;
+}
+
+.dashboard-panel__body {
+  padding: var(--space-5);
+  flex: 1;
+}
+
+.dashboard-panel__body--no-pad {
+  padding: 0;
+  flex: 1;
+}
+
+.dashboard-panel__body--actions {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dashboard-panel__empty {
+  padding: var(--space-8) var(--space-5);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+/* -------------------------------------------------------
+   Quick Actions
+------------------------------------------------------- */
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-input);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+}
+
+.quick-action:hover {
+  background-color: var(--color-bg);
+}
+
+.quick-action__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-input);
+  background-color: var(--color-light-teal);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.quick-action__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.quick-action__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quick-action__label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.quick-action__desc {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.quick-action__arrow {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.quick-action:hover .quick-action__arrow {
+  color: var(--color-primary);
+}
+
+/* -------------------------------------------------------
+   Today's Appointments Table
+------------------------------------------------------- */
+.appt-table-wrapper {
+  overflow-x: auto;
+}
+
+.appt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-body);
+}
+
+.appt-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.appt-table td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.appt-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.appt-table tbody tr:hover td {
+  background-color: var(--color-bg);
+}
+
+.appt-table__time {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.appt-table__patient {
+  font-weight: var(--font-weight-medium);
+}
+
+.appt-table__dentist {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
+/* -------------------------------------------------------
+   Upcoming Appointments List
+------------------------------------------------------- */
+.upcoming-list {
+  list-style: none;
+}
+
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.upcoming-item:last-child {
+  border-bottom: none;
+}
+
+.upcoming-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.upcoming-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.upcoming-item__patient {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.upcoming-item__meta {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}

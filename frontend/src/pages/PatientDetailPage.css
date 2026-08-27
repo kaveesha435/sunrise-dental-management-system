@@ -1,0 +1,256 @@
+/* ============================================================
+   PatientDetailPage — Patient profile / detail view styles
+   ============================================================ */
+
+/* ── Page layout ── */
+.patient-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Content grid: main (3/4) + sidebar (1/4) ── */
+.patient-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .patient-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Generic detail card ── */
+.detail-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.detail-card__header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-card__title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.detail-card__title svg {
+  width: 17px;
+  height: 17px;
+  color: var(--color-primary);
+}
+
+.detail-card__body {
+  padding: var(--space-5);
+}
+
+/* ── Profile card ── */
+.profile-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 26px;
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.profile-card__name-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-card__name {
+  font-size: 22px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  line-height: 1.2;
+}
+
+.profile-card__id {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.profile-card__badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ── Profile info grid ── */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-info-item__label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.profile-info-item__value {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.profile-info-item__value--muted {
+  color: var(--color-text-secondary);
+}
+
+/* ── Placeholder sections ── */
+.placeholder-section {
+  padding: var(--space-10) var(--space-5);
+  text-align: center;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.placeholder-section__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.placeholder-section__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.placeholder-section__title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body);
+}
+
+.placeholder-section__desc {
+  font-size: var(--font-size-small);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+/* ── Sidebar ── */
+.patient-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Summary card ── */
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary-list__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.summary-list__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-list__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.summary-list__value {
+  font-size: var(--font-size-small);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  text-align: right;
+}
+
+/* ── Page header back link ── */
+.patient-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.patient-detail-back:hover {
+  color: var(--color-primary);
+}
+
+.patient-detail-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Notes block ── */
+.patient-notes-block {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border-radius: var(--radius-input);
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  white-space: pre-wrap;
+}

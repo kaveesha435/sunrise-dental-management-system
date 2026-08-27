@@ -1,0 +1,82 @@
+/* ============================================================
+   Select
+   ============================================================ */
+.select-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.select-label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.select-required {
+  color: var(--color-danger);
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  width: 100%;
+  height: 40px;
+  padding: 0 36px 0 var(--space-3);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.select:hover {
+  border-color: #CBD5E1;
+}
+
+.select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.select--error {
+  border-color: var(--color-danger);
+}
+
+.select--error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.select-chevron {
+  position: absolute;
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.select-chevron svg {
+  width: 16px;
+  height: 16px;
+}
+
+.select-desc {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.select-desc--error {
+  color: var(--color-danger);
+}

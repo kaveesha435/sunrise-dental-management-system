@@ -1,0 +1,203 @@
+/* ============================================================
+   Sunrise Dental — Global Design System
+   All design tokens, resets, and base styles.
+   ============================================================ */
+
+/* Google Fonts — Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   CSS Custom Properties (Design Tokens)
+   ============================================================ */
+:root {
+  /* Brand Colors */
+  --color-primary:        #0F766E;
+  --color-primary-hover:  #115E59;
+  --color-secondary:      #14B8A6;
+  --color-light-teal:     #CCFBF1;
+
+  /* Neutrals */
+  --color-deep-navy:      #0F172A;
+  --color-bg:             #F8FAFC;
+  --color-card:           #FFFFFF;
+  --color-text-primary:   #0F172A;
+  --color-text-secondary: #475569;
+  --color-border:         #E2E8F0;
+
+  /* Semantic */
+  --color-success:        #16A34A;
+  --color-warning:        #F59E0B;
+  --color-danger:         #DC2626;
+  --color-info:           #2563EB;
+
+  /* Semantic light backgrounds */
+  --color-success-bg:     #F0FDF4;
+  --color-warning-bg:     #FFFBEB;
+  --color-danger-bg:      #FEF2F2;
+  --color-info-bg:        #EFF6FF;
+
+  /* Error — aliased from danger for form/auth error states */
+  --color-error:          #DC2626;
+  --color-error-bg:       #FEF2F2;
+  --color-error-border:   #FECACA;
+
+  /* Sidebar */
+  --sidebar-width:        240px;
+  --topbar-height:        64px;
+
+  /* Typography */
+  --font-family:          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --font-size-page-title:    28px;
+  --font-size-section-title: 20px;
+  --font-size-card-title:    16px;
+  --font-size-body:          14px;
+  --font-size-small:         12px;
+  --font-size-button:        14px;
+
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold:600;
+  --font-weight-bold:    700;
+
+  --line-height-default: 1.5;
+  --line-height-normal:  1.6;
+  --line-height-tight:   1.25;
+
+  /* Border Radius */
+  --radius-input:   8px;
+  --radius-card:    12px;
+  --radius-pill:    9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+
+  /* Spacing scale */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow:   300ms ease;
+
+  /* Z-index scale */
+  --z-sidebar:  100;
+  --z-topbar:   90;
+  --z-modal:    200;
+  --z-toast:    300;
+  --z-dropdown: 150;
+}
+
+/* ============================================================
+   CSS Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-default);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ============================================================
+   Scrollbar styling
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* ============================================================
+   Focus visible
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Utility classes
+   ============================================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

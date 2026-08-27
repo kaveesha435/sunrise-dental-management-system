@@ -1,0 +1,341 @@
+/* ── Dentists Page Styles ── */
+
+.dentists-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.dentists-page__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.dentists-page__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-card);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.dentists-page__toolbar-right {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* Table layout styling */
+.dentists-table-card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.dentists-table-wrapper {
+  overflow-x: auto;
+}
+
+.dentists-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.dentists-table th,
+.dentists-table td {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  font-size: var(--font-size-body);
+}
+
+.dentists-table th {
+  background: #F8FAFC;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.dentists-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dentists-table tr:hover td {
+  background-color: #F8FAFC;
+}
+
+/* Dentist Cell details */
+.dentist-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dentist-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-light-teal);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-body);
+  flex-shrink: 0;
+}
+
+.dentist-cell__name {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.dentist-cell__id {
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.dentist-cell__spec {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.dentist-cell__email {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+/* Appointment count badge */
+.appointment-count-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-info-bg);
+  color: var(--color-info);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+}
+
+/* Actions */
+.dentists-table__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.table-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.table-action-btn:hover {
+  background: #F1F5F9;
+  color: var(--color-text-primary);
+  border-color: #CBD5E1;
+}
+
+.table-action-btn--danger:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.table-action-btn .svg-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Pagination / Footer */
+.dentists-table-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Form Styles */
+.dentist-form-body {
+  margin-top: var(--space-2);
+}
+
+.dentist-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.active-checkbox-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  grid-column: span 2;
+  margin-top: var(--space-2);
+}
+
+.active-checkbox-field label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-small);
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.checkbox-wrapper span {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+/* Active Badge in Table */
+.active-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+}
+
+.active-badge--true {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(22, 163, 74, 0.15);
+}
+
+.active-badge--false {
+  background-color: #F1F5F9;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+/* Delete Confirm Modal styles */
+.delete-confirm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.delete-confirm-body {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-2) 0;
+}
+
+.delete-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.delete-confirm-icon .svg-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.delete-confirm-text strong {
+  display: block;
+  font-size: var(--font-size-card-title);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.delete-confirm-text p {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+/* Schedule Modal Styles */
+.schedule-modal-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.schedule-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--color-border);
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-body);
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.schedule-table th {
+  background: #F8FAFC;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.schedule-table tr:last-child td {
+  border-bottom: none;
+}
+
+.schedule-time {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* Responsive Toolbar */
+@media (max-width: 1024px) {
+  .dentists-page__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .dentists-page__toolbar-right {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+  
+  .dentists-page__toolbar-right > * {
+    flex: 1 1 200px;
+  }
+}
