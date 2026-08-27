@@ -8,6 +8,7 @@ import com.sunrisedental.entity.Appointment;
 import com.sunrisedental.entity.AppointmentStatus;
 import com.sunrisedental.entity.Bill;
 import com.sunrisedental.entity.PaymentStatus;
+import com.sunrisedental.exception.BusinessConflictException;
 import com.sunrisedental.exception.ResourceNotFoundException;
 import com.sunrisedental.repository.AppointmentRepository;
 import com.sunrisedental.repository.BillRepository;
@@ -89,11 +90,11 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", "id", request.getAppointmentId()));
 
         if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
-            throw new IllegalArgumentException("Cannot generate a bill for a cancelled appointment.");
+            throw new BusinessConflictException("Cannot generate a bill for a cancelled appointment.");
         }
 
         if (billRepository.existsByAppointmentId(request.getAppointmentId())) {
-            throw new IllegalArgumentException("A bill has already been generated for this appointment.");
+            throw new BusinessConflictException("A bill has already been generated for this appointment.");
         }
 
         BigDecimal fee = request.getConsultationFee() != null ? request.getConsultationFee() : DEFAULT_CONSULTATION_FEE;

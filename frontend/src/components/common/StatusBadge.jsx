@@ -6,6 +6,7 @@ import './StatusBadge.css';
 const STATUS_MAP = {
   // Appointments
   SCHEDULED:   { variant: 'info',    label: 'Scheduled' },
+  CONFIRMED:   { variant: 'info',    label: 'Confirmed' },
   IN_PROGRESS: { variant: 'warning', label: 'In Progress' },
   COMPLETED:   { variant: 'success', label: 'Completed' },
   CANCELLED:   { variant: 'danger',  label: 'Cancelled' },
