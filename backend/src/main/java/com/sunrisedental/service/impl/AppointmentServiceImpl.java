@@ -8,6 +8,7 @@ import com.sunrisedental.entity.AppointmentStatus;
 import com.sunrisedental.entity.Dentist;
 import com.sunrisedental.entity.Patient;
 import com.sunrisedental.entity.Treatment;
+import com.sunrisedental.exception.BusinessConflictException;
 import com.sunrisedental.exception.ResourceNotFoundException;
 import com.sunrisedental.repository.AppointmentRepository;
 import com.sunrisedental.repository.DentistRepository;
@@ -260,7 +261,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             LocalTime end = start.plusMinutes(appt.getDuration());
 
             if (newStart.isBefore(end) && newEnd.isAfter(start)) {
-                throw new IllegalArgumentException(String.format(
+                throw new BusinessConflictException(String.format(
                         "Dentist is already booked between %s and %s on this date.",
                         start, end));
             }
@@ -284,7 +285,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             LocalTime end = start.plusMinutes(appt.getDuration());
 
             if (newStart.isBefore(end) && newEnd.isAfter(start)) {
-                throw new IllegalArgumentException(String.format(
+                throw new BusinessConflictException(String.format(
                         "Patient already has an appointment between %s and %s on this date.",
                         start, end));
             }
