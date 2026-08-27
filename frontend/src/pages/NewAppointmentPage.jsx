@@ -5,6 +5,7 @@ import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
 import { useToast } from '../components/common/Toast';
+import LoadingState from '../components/common/LoadingState';
 import appointmentService from '../services/appointmentService';
 import patientService from '../services/patientService';
 import { formatDate } from '../utils/formatters';
