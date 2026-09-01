@@ -9,8 +9,8 @@ import EmptyState from '../components/common/EmptyState';
 import LoadingState from '../components/common/LoadingState';
 import ErrorState from '../components/common/ErrorState';
 import { reportService } from '../services/reportService';
-import { dentistService } from '../services/dentistService';
-import { treatmentService } from '../services/treatmentService';
+import dentistService from '../services/dentistService';
+import treatmentService from '../services/treatmentService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import './ReportsPage.css';
 
@@ -38,8 +38,8 @@ export default function ReportsPage() {
   const loadFilterOptions = async () => {
     try {
       const [dentistsRes, treatmentsRes] = await Promise.all([
-        dentistService.getAllDentists(1, 100, ''),
-        treatmentService.getAllTreatments(1, 100, '')
+        dentistService.getAll({ page: 0, size: 100 }),
+        treatmentService.getAll({ page: 0, size: 100 })
       ]);
       setDentists(dentistsRes.content || []);
       setTreatments(treatmentsRes.content || []);
