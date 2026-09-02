@@ -46,8 +46,8 @@ class ReportIntegrationTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        user.setUsername("admin");
-        user.setEmail("admin@sunrisedental.com");
+        user.setUsername("report-test-admin");
+        user.setEmail("report-test-admin@sunrisedental.lk");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
         user.setActive(true);
@@ -57,9 +57,8 @@ class ReportIntegrationTest {
 
     @Test
     void testGetReportData_Success() throws Exception {
-        mockMvc.perform(get("/api/reports")
+        mockMvc.perform(get("/api/reports/summary")
                 .header("Authorization", token)
-                .param("period", "last_30_days")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))

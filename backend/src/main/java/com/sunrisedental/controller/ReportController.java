@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/reports")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ReportController {
 
     private final ReportService reportService;
@@ -32,7 +31,7 @@ public class ReportController {
             @RequestParam(required = false) AppointmentStatus status) {
         
         ReportDto report = reportService.generateReport(startDate, endDate, dentistId, treatmentId, status);
-        return ResponseEntity.ok(ApiResponse.success(report, "Report generated successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Report generated successfully", report));
     }
 
     @GetMapping("/export")

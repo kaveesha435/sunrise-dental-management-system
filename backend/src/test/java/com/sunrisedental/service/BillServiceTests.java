@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.sunrisedental.exception.BusinessConflictException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -164,7 +166,7 @@ class BillServiceTests {
         billService.saveBill(request);
 
         // Attempt to save again
-        assertThrows(IllegalArgumentException.class, () -> billService.saveBill(request));
+        assertThrows(BusinessConflictException.class, () -> billService.saveBill(request));
     }
 
     @Test
@@ -178,7 +180,7 @@ class BillServiceTests {
         request.setConsultationFee(new BigDecimal("1500.00"));
         request.setPaymentStatus("PENDING");
 
-        assertThrows(IllegalArgumentException.class, () -> billService.saveBill(request));
+        assertThrows(BusinessConflictException.class, () -> billService.saveBill(request));
     }
 
     @Test

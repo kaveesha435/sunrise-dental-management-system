@@ -67,8 +67,8 @@ class BillingIntegrationTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        user.setUsername("admin");
-        user.setEmail("admin@sunrisedental.com");
+        user.setUsername("billing-test-admin");
+        user.setEmail("billing-test-admin@sunrisedental.lk");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
         user.setActive(true);
@@ -77,18 +77,25 @@ class BillingIntegrationTest {
 
         Patient patient = Patient.builder()
                 .fullName("Test Patient")
+                .dateOfBirth(LocalDate.of(1990, 1, 1))
+                .gender("MALE")
                 .contactNumber("0771234567")
+                .address("123 Main St")
+                .city("Colombo")
+                .postalCode("00100")
                 .build();
         patient = patientRepository.save(patient);
 
         Dentist dentist = Dentist.builder()
                 .name("Dr. D. Perera")
                 .specialization("General")
+                .contact("0712345678")
                 .build();
         dentist = dentistRepository.save(dentist);
 
         Treatment treatment = Treatment.builder()
                 .name("Root Canal")
+                .description("Endodontic therapy")
                 .standardCost(new BigDecimal("15000.00"))
                 .build();
         treatment = treatmentRepository.save(treatment);
@@ -112,7 +119,6 @@ class BillingIntegrationTest {
         request.setAppointmentId(appointment.getId());
         request.setConsultationFee(new BigDecimal("1500.00"));
         request.setPaymentStatus("PAID");
-        request.setPaymentMethod("CREDIT_CARD");
 
         mockMvc.perform(post("/api/billing")
                 .header("Authorization", token)
@@ -126,7 +132,7 @@ class BillingIntegrationTest {
 
     @Test
     void testGetBillingInfo_Success() throws Exception {
-        mockMvc.perform(get("/api/billing/appointment/" + appointment.getId())
+        mockMvc.perform(get("/api/billing/appointments/" + appointment.getId())
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,8 +142,9 @@ class BillingIntegrationTest {
 
     @Test
     void testCalculateBill_Success() throws Exception {
-        mockMvc.perform(get("/api/billing/calculate/" + appointment.getId())
+        mockMvc.perform(get("/api/billing/calculate")
                 .header("Authorization", token)
+                .param("appointmentId", String.valueOf(appointment.getId()))
                 .param("consultationFee", "2000.00")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

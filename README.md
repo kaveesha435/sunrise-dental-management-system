@@ -95,7 +95,7 @@ The backend exposes a secure REST API under `/api`. All endpoints (except login/
 ## Setup & Execution Instructions
 
 ### Prerequisites
-- **Java 17+**
+- **Java 17–21** (JDK 22+ is not supported — Lombok fails to compile under it)
 - **Maven 3.6+**
 - **Node.js 18+** & **npm 9+**
 - **PostgreSQL 14+**
@@ -160,9 +160,10 @@ mvn test
 
 ### Sample Development Account
 
-Once the application is running, you can log in using the default administrator account (if seeded by your database initialization script):
+Once the application is running, you can log in using the default administrator account, which `DataSeeder` creates automatically on first startup:
 - **Username:** `admin`
-- **Password:** `admin123`
+- **Email:** `admin@sunrisedental.lk`
+- **Password:** `Admin@123`
 *(Note: Change these credentials immediately in a production environment).*
 
 ---

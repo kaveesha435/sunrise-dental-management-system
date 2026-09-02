@@ -1,12 +1,16 @@
 package com.sunrisedental.exception;
 
 import com.sunrisedental.dto.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
  * Centralised exception handling for all REST controllers.
  * Converts exceptions into consistent {@link ApiResponse} error payloads.
  */
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -72,8 +77,44 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Authentication failed: " + ex.getMessage()));
     }
 
+    /**
+     * Unmapped URL. Without this the catch-all below would report a typo'd
+     * path as a 500 rather than a 404.
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoResourceFound(NoResourceFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error("No endpoint found for the requested path."));
+    }
+
+    /**
+     * Known path, wrong HTTP method — a 405, not a server error.
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(ApiResponse.error(ex.getMethod() + " is not supported for this endpoint."));
+    }
+
+    /**
+     * Unparseable path/query parameter (e.g. a value outside an enum) — the
+     * caller sent bad input, so 400 rather than 500.
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Invalid value for parameter '" + ex.getName() + "'."));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneralException(Exception ex) {
+        // The response is deliberately vague; the stack trace must still reach
+        // the logs or genuine 500s are impossible to diagnose.
+        log.error("Unhandled exception", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("An unexpected server error occurred. Please contact support."));
