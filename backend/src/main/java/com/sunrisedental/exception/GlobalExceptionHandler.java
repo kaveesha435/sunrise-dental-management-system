@@ -2,7 +2,9 @@ package com.sunrisedental.exception;
 
 import com.sunrisedental.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -108,6 +110,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error("Invalid value for parameter '" + ex.getName() + "'."));
+    }
+
+    /**
+     * A database constraint (unique name, unique email, FK) rejected the write.
+     * That is a caller-visible conflict, not a server fault, so 409 not 500.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.warn("Database constraint violation", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error("That record conflicts with an existing one. Check for duplicate values and try again."));
+    }
+
+    /**
+     * A required query parameter was absent. That is a malformed request from
+     * the caller, so 400 rather than a catch-all 500.
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingParameter(MissingServletRequestParameterException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Required parameter '" + ex.getParameterName() + "' is missing."));
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useReducer } from 'react';
+import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import './Toast.css';
 
 /* ============================================================
@@ -59,14 +59,51 @@ export function useToast() {
   const ctx = useContext(ToastContext);
   if (!ctx) throw new Error('useToast must be used within <ToastProvider>');
 
-  const toast = {
-    success: (message, opts) => ctx.addToast({ message, variant: 'success', ...opts }),
-    error:   (message, opts) => ctx.addToast({ message, variant: 'danger',  ...opts }),
-    warning: (message, opts) => ctx.addToast({ message, variant: 'warning', ...opts }),
-    info:    (message, opts) => ctx.addToast({ message, variant: 'info',    ...opts }),
-  };
+  const { addToast } = ctx;
 
-  return { toast };
+  // Memoised so the identity stays stable across renders: several pages list
+  // these in useEffect/useCallback dependency arrays, and a fresh function each
+  // render would re-trigger those effects in a loop.
+  const toast = useMemo(() => ({
+    success: (message, opts) => addToast({ message, variant: 'success', ...opts }),
+    error:   (message, opts) => addToast({ message, variant: 'danger',  ...opts }),
+    warning: (message, opts) => addToast({ message, variant: 'warning', ...opts }),
+    info:    (message, opts) => addToast({ message, variant: 'info',    ...opts }),
+  }), [addToast]);
+
+  /**
+   * showToast — used by the page components. Accepts either
+   *   showToast({ message, type: 'success' | 'error', duration })
+   *   showToast('danger', 'message')
+   * and normalises 'error' to the 'danger' variant the UI renders.
+   */
+  const showToast = useCallback((arg, positionalMessage) => {
+    if (typeof arg === 'string') {
+      return addToast({ message: positionalMessage, variant: normaliseVariant(arg) });
+    }
+    const { message, type, variant, duration } = arg ?? {};
+    return addToast({
+      message,
+      variant: normaliseVariant(variant ?? type),
+      ...(duration != null ? { duration } : {}),
+    });
+  }, [addToast]);
+
+  return { toast, showToast };
+}
+
+function normaliseVariant(value) {
+  switch (value) {
+    case 'error':
+    case 'danger':
+      return 'danger';
+    case 'success':
+      return 'success';
+    case 'warning':
+      return 'warning';
+    default:
+      return 'info';
+  }
 }
 
 /* ============================================================

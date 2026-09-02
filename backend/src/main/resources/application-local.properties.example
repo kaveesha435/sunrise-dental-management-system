@@ -1,0 +1,20 @@
+# ============================================================
+# Local configuration template
+# ------------------------------------------------------------
+# Copy this file to  application-local.properties  (same folder)
+# and fill in your own PostgreSQL password.
+#
+#   The copy is gitignored, so your password is never committed.
+#
+# Run the backend with:  mvnw spring-boot:run -Dspring-boot.run.profiles=local
+# ============================================================
+
+# --- Database ---------------------------------------------
+# Create the database first:  CREATE DATABASE sunrise_dental;
+spring.datasource.url=jdbc:postgresql://localhost:5432/sunrise_dental
+spring.datasource.username=postgres
+spring.datasource.password=CHANGE_ME
+
+# --- JWT ---------------------------------------------------
+# Any random text, at least 32 characters.
+jwt.secret=change-me-to-a-long-random-string-at-least-32-chars

@@ -8,6 +8,17 @@ import billingService from '../services/billingService';
 import { formatCurrency, formatDate, formatDateTime, formatTime } from '../utils/formatters';
 import './BillingReceiptPage.css';
 
+
+/**
+ * Dentist names are usually entered already carrying a title
+ * (the Dentists form prompts for "Dr. K. Perera"), so only add the
+ * prefix when it is genuinely missing — otherwise it reads "Dr. Dr.".
+ */
+function formatDentistName(name) {
+  if (!name) return '—';
+  return /^dr\.?\s/i.test(name.trim()) ? name.trim() : `Dr. ${name.trim()}`;
+}
+
 export default function BillingReceiptPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -144,7 +155,7 @@ export default function BillingReceiptPage() {
               <div className="receipt-info-row">
                 <span className="receipt-info-row__label">Dentist:</span>
                 <span className="receipt-info-row__value">
-                  Dr. {bill.dentistName} ({bill.dentistSpecialization})
+                  {formatDentistName(bill.dentistName)} ({bill.dentistSpecialization})
                 </span>
               </div>
             </div>

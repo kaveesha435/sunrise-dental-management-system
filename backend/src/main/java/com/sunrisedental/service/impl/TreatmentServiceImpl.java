@@ -4,6 +4,7 @@ import com.sunrisedental.dto.PagedResponse;
 import com.sunrisedental.dto.TreatmentRequest;
 import com.sunrisedental.dto.TreatmentResponse;
 import com.sunrisedental.entity.Treatment;
+import com.sunrisedental.exception.BusinessConflictException;
 import com.sunrisedental.exception.ResourceNotFoundException;
 import com.sunrisedental.repository.AppointmentRepository;
 import com.sunrisedental.repository.TreatmentRepository;
@@ -33,6 +34,13 @@ public class TreatmentServiceImpl implements TreatmentService {
         // Enforce non-negative price
         if (request.getStandardCost().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Standard cost cannot be a negative amount.");
+        }
+
+        // Treatment names are unique in the catalogue — reject duplicates with a
+        // clear 409 instead of letting the DB constraint surface as a 500.
+        if (treatmentRepository.existsByNameIgnoreCase(request.getName().trim())) {
+            throw new BusinessConflictException(
+                    "A treatment named '" + request.getName().trim() + "' already exists in the catalogue.");
         }
 
         Treatment treatment = toEntity(request);
@@ -88,6 +96,11 @@ public class TreatmentServiceImpl implements TreatmentService {
 
         Treatment treatment = treatmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Treatment", "id", id));
+
+        if (treatmentRepository.existsByNameIgnoreCaseAndIdNot(request.getName().trim(), id)) {
+            throw new BusinessConflictException(
+                    "A treatment named '" + request.getName().trim() + "' already exists in the catalogue.");
+        }
 
         applyUpdates(treatment, request);
         treatment = treatmentRepository.save(treatment);
