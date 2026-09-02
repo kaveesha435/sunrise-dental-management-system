@@ -70,8 +70,8 @@ class AppointmentIntegrationTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        user.setUsername("admin");
-        user.setEmail("admin@sunrisedental.com");
+        user.setUsername("appointment-test-admin");
+        user.setEmail("appointment-test-admin@sunrisedental.lk");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
         user.setActive(true);
@@ -154,13 +154,13 @@ class AppointmentIntegrationTest {
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest()) // Global exception handler maps IllegalArgument to 400
+                .andExpect(status().isConflict()) // BusinessConflictException maps to 409
                 .andExpect(jsonPath("$.success").value(false));
     }
 
     @Test
     void testCancelAppointment_Success() throws Exception {
-        mockMvc.perform(post("/api/appointments/" + appointment.getId() + "/cancel")
+        mockMvc.perform(put("/api/appointments/" + appointment.getId() + "/cancel")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

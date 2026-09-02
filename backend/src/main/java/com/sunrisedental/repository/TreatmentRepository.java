@@ -29,6 +29,10 @@ public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
             @Param("active") Boolean active,
             Pageable pageable);
 
+    boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
+
     long countByActiveTrue();
 
     long countByActiveFalse();

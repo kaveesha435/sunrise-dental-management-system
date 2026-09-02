@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.sunrisedental.exception.BusinessConflictException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -110,6 +112,6 @@ class AppointmentServiceTests {
         conflictRequest.setAppointmentTime(LocalTime.of(10, 15));
         conflictRequest.setDuration(30);
 
-        assertThrows(IllegalArgumentException.class, () -> appointmentService.create(conflictRequest));
+        assertThrows(BusinessConflictException.class, () -> appointmentService.create(conflictRequest));
     }
 }

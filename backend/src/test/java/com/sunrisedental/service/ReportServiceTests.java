@@ -50,15 +50,15 @@ class ReportServiceTests {
         when(appointmentRepository.getTotalRevenue(any(), any(), any(), any(), eq(null)))
                 .thenReturn(new BigDecimal("150000.00"));
 
-        List<Object[]> mockDailyVolume = List.of(new Object[]{"2023-10-01", 5L});
+        List<Object[]> mockDailyVolume = List.<Object[]>of(new Object[]{"2023-10-01", 5L});
         when(appointmentRepository.getDailyAppointmentVolume(any(), any(), any(), any(), eq(null)))
                 .thenReturn(mockDailyVolume);
 
-        List<Object[]> mockDailyRevenue = List.of(new Object[]{"2023-10-01", new BigDecimal("7500.00")});
+        List<Object[]> mockDailyRevenue = List.<Object[]>of(new Object[]{"2023-10-01", new BigDecimal("7500.00")});
         when(appointmentRepository.getDailyRevenueTrend(any(), any(), any(), any(), eq(null)))
                 .thenReturn(mockDailyRevenue);
 
-        List<Object[]> mockTreatmentData = List.of(new Object[]{"Root Canal", 10L, new BigDecimal("50000.00")});
+        List<Object[]> mockTreatmentData = List.<Object[]>of(new Object[]{"Root Canal", 10L, new BigDecimal("50000.00")});
         when(appointmentRepository.getTreatmentReportData(any(), any(), any(), any(), eq(null)))
                 .thenReturn(mockTreatmentData);
 

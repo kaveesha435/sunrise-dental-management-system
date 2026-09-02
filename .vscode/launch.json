@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Backend: Sunrise Dental API",
+      "request": "launch",
+      "mainClass": "com.sunrisedental.SunriseDentalApplication",
+      "projectName": "sunrise-dental-api",
+      "args": "--spring.profiles.active=local"
+    }
+  ]
+}

@@ -25,6 +25,12 @@ export default function Modal({
 }) {
   const dialogRef = useRef(null);
 
+  // Keep the latest onClose without making it an effect dependency — callers
+  // pass inline arrows, so depending on it would re-run the effect (and steal
+  // focus back to the dialog) on every keystroke inside the modal.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => { onCloseRef.current = onClose; });
+
   // Lock body scroll and handle Escape key
   useEffect(() => {
     if (!isOpen) return;
@@ -33,7 +39,7 @@ export default function Modal({
     dialogRef.current?.focus();
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onCloseRef.current?.();
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -44,7 +50,7 @@ export default function Modal({
       document.body.style.overflow = '';
       previouslyFocused?.focus();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

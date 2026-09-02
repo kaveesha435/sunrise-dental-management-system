@@ -13,6 +13,7 @@ import com.sunrisedental.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -44,6 +45,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DashboardServiceImpl implements DashboardService {
 
     private final PatientRepository patientRepository;

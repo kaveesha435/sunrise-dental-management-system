@@ -369,3 +369,56 @@
     color: #000000 !important;
   }
 }
+
+/* ============================================================
+   Print — keep the receipt on a single page
+   ------------------------------------------------------------
+   The default vertical rhythm pushed the footer and signature
+   block onto a second sheet. Fix the page box and tighten the
+   spacing so the whole receipt fits on one A4 page.
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  .receipt-page-container,
+  .receipt-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .receipt-card {
+    padding: 0 !important;
+  }
+
+  .receipt-header {
+    gap: var(--space-2) !important;
+  }
+
+  .receipt-section {
+    gap: var(--space-2) !important;
+  }
+
+  .receipt-divider {
+    margin: var(--space-3) 0 !important;
+  }
+
+  .receipt-footer {
+    margin-top: var(--space-3) !important;
+    gap: var(--space-3) !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .receipt-signatures {
+    margin-top: var(--space-5) !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .signature-box {
+    height: 28px !important;
+  }
+}

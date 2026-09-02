@@ -19,3 +19,39 @@
   overflow-y: auto;
   padding: var(--space-6);
 }
+
+/* ============================================================
+   Print
+   ------------------------------------------------------------
+   The shell is a fixed 100vh flex layout whose content pane
+   scrolls internally. Left as-is, printing captures only the
+   first screenful and clips the rest, so release the height and
+   overflow constraints and drop the navigation chrome.
+   ============================================================ */
+@media print {
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .app-shell,
+  .app-shell__main,
+  .app-shell__content {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .app-shell__content {
+    padding: 0 !important;
+  }
+
+  .sidebar,
+  .topbar {
+    display: none !important;
+  }
+}

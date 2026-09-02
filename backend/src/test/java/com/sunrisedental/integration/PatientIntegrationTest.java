@@ -53,8 +53,8 @@ class PatientIntegrationTest {
     @BeforeEach
     void setUp() {
         User user = new User();
-        user.setUsername("admin");
-        user.setEmail("admin@sunrisedental.com");
+        user.setUsername("patient-test-admin");
+        user.setEmail("patient-test-admin@sunrisedental.lk");
         user.setPassword("password123");
         user.setRole(Role.ADMIN);
         user.setActive(true);
